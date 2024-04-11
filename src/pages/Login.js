@@ -1,9 +1,11 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import COVER_IMAGE from '../gadgets.png'
 import GOOGLE_ICON from '../icons8-google.svg'
 import { Link, useNavigate } from 'react-router-dom';
 import Register from './Register';
+import { Flip, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
 	let navigate=useNavigate();
@@ -14,7 +16,6 @@ export default function Login() {
 
 	const handleChange = (e)=> {
 		setFormData({...formData, [e.target.name]: e.target.value});
-		console.log(formData.email);
 	}
 
 	const setLocalStorage = (data)=>{
@@ -30,16 +31,41 @@ export default function Login() {
 	}
 
 	const handleSubmit = async (e)=>{
-		e.preventDefault();
+		e.preventDefault();	
 		console.log(formData);
 		try{
-
 		const result = await axios.post("http://localhost:8081/api/v1/auth/login", formData);
 		console.log(result.data);
 		setLocalStorage(result.data);
-		navigate("/");
+		toast.success('Login successfull', {
+			position: "top-right",
+			autoClose: 2000,
+			hideProgressBar: true,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "light",
+			transition: Flip,
+		});
+	
+		setTimeout(()=>{
+			navigate("/");
+		}, 5);
+		
 	} catch(error) {
 		console.log(error)
+		toast.error('Please fill out all the fields', {
+			position: "top-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "light",
+			transition: Flip,
+			});
 	}
 	setFormData({
 	email: "",
@@ -95,7 +121,7 @@ export default function Login() {
 				<p className="sm:text-sm  sm:font-medium whitespace-nowrap cursor-pointer underline underline-offset-2 ">Forgot Password ?</p> 
 			</div> */}
 			<div className="w-full flex flex-col sm:my-4 my-2">
-				<button className="w-full text-black my-2 border-2 bg-red-600  hover:bg-red-800 hover:text-[#060606]  rounded-md p-4 text-center flex items-center justify-center">
+				<button className="w-full text-black my-2 border-2 bg-neon  hover:bg-tomato/65  hover:text-[#060606]  rounded-md p-4 text-center flex items-center justify-center">
 					Log in
 				</button>
 				<Link to = '/register'className="w-full text-[#060606] my-2 bg-white border-2  hover:bg-slate-200  rounded-md p-4 text-center flex items-center justify-center">
@@ -120,6 +146,7 @@ export default function Login() {
 				<p className="text-sm font-normal">Dont't have a account? <Link to='/register' className="font-semibold underline cursor-pointer">Sign up for free</Link> </p>
 			</div>
 		</div>
+		<ToastContainer />
 	</div>
   ) 
 }

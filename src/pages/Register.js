@@ -3,9 +3,12 @@ import React, { useState } from 'react'
 import COVER_IMAGE from '../gadgets.png'
 import GOOGLE_ICON from '../icons8-google.svg'
 import { Link, useNavigate } from 'react-router-dom'
+import { Flip, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Register() {
+
 	let navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		name: "",
@@ -26,9 +29,31 @@ export default function Register() {
 		try {
 			const result = await axios.post("http://localhost:8081/api/v1/auth/register", formData);
 			console.log(result.data);
+			toast.success('Registration succesful !', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				transition: Flip,
+			});
 			navigate("/login");
 		} catch (error) {
 			console.log(error)
+			toast.error('Please fill out all the fields', {
+				position: "top-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				transition: Flip,
+				});
 		}
 		setFormData({
 			name: "",
@@ -38,6 +63,7 @@ export default function Register() {
 			password: "",
 			role: ""
 		})
+		
 	}
 
 
@@ -128,7 +154,7 @@ export default function Register() {
 				<p className="sm:text-sm  sm:font-medium whitespace-nowrap cursor-pointer underline underline-offset-2 ">Forgot Password ?</p> 
 			</div> */}
 						<div className="w-full flex flex-col sm:my-4 my-2">
-							<button className="w-full text-black my-2 border-2 bg-red-600  hover:bg-red-800 hover:text-[#060606]  rounded-md p-4 text-center flex items-center justify-center">
+							<button className="w-full text-black my-2 border-2 bg-neon  hover:bg-neon/65  hover:text-[#060606]  rounded-md p-4 text-center flex items-center justify-center">
 								Register
 							</button>
 							{/* <button className="w-full text-[#060606] my-2 bg-white border-2  hover:bg-slate-200  rounded-md p-4 text-center flex items-center justify-center">
@@ -153,6 +179,7 @@ export default function Register() {
 					<p className="text-sm font-normal">Already have an account? <Link to='/login' className="font-semibold underline cursor-pointer">Click here to login</Link> </p>
 				</div>
 			</div>
+			<ToastContainer />
 		</div>
 	)
 }
